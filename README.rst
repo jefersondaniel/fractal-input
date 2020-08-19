@@ -27,9 +27,9 @@ Install:
     class UserHandler(InputHandler):
         def define(self):
             user = self.add('user', User)
-            user.add('name', 'string', {'required': True})
-            user.add('email', 'string', {'required': True})
-            user.add('age', 'integer')
+            user.add('name', 'string')
+            user.add('email', 'string')
+            user.add('age', 'integer', {'required': False})
             user.add('createdAt', DatetimeNode('%m/%d/%y %H:%M:%S'))
 
             address = user.add('address', Address)

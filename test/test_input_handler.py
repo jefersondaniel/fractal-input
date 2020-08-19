@@ -89,18 +89,18 @@ class TestInputHandler(object):
 
         class DataHandler(InputHandler):
             def define(self):
-                self.add('string_value', 'string', {'required': True})
-                self.add('integer_value', 'integer', {'required': True})
-                self.add('float_value', 'float', {'required': True})
-                self.add('boolean_value', 'boolean')
-                self.add('none_string_value', 'string')
-                self.add('none_integer_value', 'integer')
-                self.add('none_float_value', 'float')
-                self.add('none_boolean_value', 'boolean')
-                self.add('dict_value', 'dict')
-                self.add('none_object_value', User)
-                self.add('none_datetime_value', DatetimeNode('%Y-%m-%d'))
-                self.add('none_list_value', ListNode('string'))
+                self.add('string_value', 'string')
+                self.add('integer_value', 'integer')
+                self.add('float_value', 'float')
+                self.add('boolean_value', 'boolean', {'required': False})
+                self.add('none_string_value', 'string', {'required': False})
+                self.add('none_integer_value', 'integer', {'required': False})
+                self.add('none_float_value', 'float', {'required': False})
+                self.add('none_boolean_value', 'boolean', {'required': False})
+                self.add('dict_value', 'dict', {'required': False})
+                self.add('none_object_value', User, {'required': False})
+                self.add('none_datetime_value', DatetimeNode('%Y-%m-%d'), {'required': False})
+                self.add('none_list_value', ListNode('string'), {'required': False})
 
         handler = DataHandler()
 

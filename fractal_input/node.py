@@ -8,7 +8,7 @@ class Node(object):
         self.children = []
         self.constraints = []
         self.type_handler = type_handler
-        self.is_required = False
+        self.is_required = True
 
     def has_children(self):
         return len(self.children) > 0
@@ -54,8 +54,9 @@ class Node(object):
         if not options:
             options = {}
 
-        if options.get('required', False):
-            self.is_required = True
+        self.is_required = options.get('required', True)
+
+        if self.is_required:
             self.constraints.append(RequiredConstraint())
 
 
