@@ -1,0 +1,8 @@
+[run]
+branch = False
+omit=
+    fractal_output/__init__.py
+    fractal_output/version.py
+[report]
+exclude_lines =
+    raise NotImplementedError

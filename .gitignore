@@ -1,0 +1,13 @@
+*.pyc
+*.pyo
+.cache
+.coverage
+.coverage.*
+.eggs
+coverage.xml
+venv/
+dist/
+build/
+fractal_output.egg-info/
+var/
+.pytest_cache/
