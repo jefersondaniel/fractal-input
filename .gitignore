@@ -8,6 +8,6 @@ coverage.xml
 venv/
 dist/
 build/
-fractal_output.egg-info/
+fractal_input.egg-info/
 var/
 .pytest_cache/

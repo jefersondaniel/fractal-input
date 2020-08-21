@@ -169,3 +169,42 @@ class TestInputHandler(object):
 
         with pytest.raises(Exception):
             handler.bind({})
+
+    def test_nullable_values(self):
+        class DataHandler(InputHandler):
+            def define(self):
+                self.add('name', 'string', {'required': False})
+
+        handler = DataHandler()
+        handler.bind({'name': None})
+
+        assert handler.is_valid()
+        assert not handler.get_error_as_string()
+
+    def test_nested_object_lists(self):
+        class User(object):
+            name = None
+
+        class Telephone(object):
+            number = None
+
+        class DataHandler(InputHandler):
+            def define(self):
+                users = self.add('users', ListNode(User))
+                telephone = users.add('telephones', ListNode(Telephone))
+                telephone.add('number', 'string')
+
+        handler = DataHandler()
+        handler.bind({
+            'users': [{
+                'telephones': [
+                    {'number': '123'}
+                ]
+            }]
+        })
+
+        assert handler.is_valid()
+        assert not handler.get_error_as_string()
+
+        data = handler.get_data()
+        assert '123' == data['users'][0].telephones[0].number

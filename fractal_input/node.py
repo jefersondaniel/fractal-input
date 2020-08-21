@@ -153,7 +153,7 @@ class ListNode(Node):
         return result
 
     def add(self, name, node_type, options=None):
-        self.get_inner_node().add(name, node_type, options)
+        return self.get_inner_node().add(name, node_type, options)
 
     def isiterable(self, value):
         try:
