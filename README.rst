@@ -22,7 +22,7 @@ Install:
 
 .. code:: python
 
-    from fractal_input import InputHandler, DatetimeNode, Telephone
+    from fractal_input import InputHandler, DatetimeNode, ListNode
 
     class UserHandler(InputHandler):
         def define(self):
