@@ -208,3 +208,40 @@ class TestInputHandler(object):
 
         data = handler.get_data()
         assert '123' == data['users'][0].telephones[0].number
+
+    def test_supports_data_classes(self):
+        class User(object):
+            def __init__(self, name, email, telephones):
+                self.name = name
+                self.email = email
+                self.telephones = telephones
+
+        class Telephone(object):
+            number = None
+
+        class DataHandler(InputHandler):
+            def define(self):
+                users = self.add('users', ListNode(User))
+                users.add('name', 'string')
+                users.add('email', 'string')
+                telephone = users.add('telephones', ListNode(Telephone))
+                telephone.add('number', 'string')
+
+        handler = DataHandler()
+        handler.bind({
+            'users': [{
+                'name': 'Rick',
+                'email': 'rick@rick.com',
+                'telephones': [
+                    {'number': '123'}
+                ]
+            }]
+        })
+
+        assert handler.is_valid()
+        assert not handler.get_error_as_string()
+
+        data = handler.get_data()
+        assert 'Rick' == data['users'][0].name
+        assert 'rick@rick.com' == data['users'][0].email
+        assert '123' == data['users'][0].telephones[0].number

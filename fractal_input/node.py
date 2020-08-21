@@ -98,17 +98,20 @@ class ObjectNode(Node):
         self.object_class = object_class
 
     def get_value(self, input_value):
-        data = super(ObjectNode, self).get_value(input_value)
-        instance = self.object_class()
-
         if input_value is None:
             return None
+
+        data = super(ObjectNode, self).get_value(input_value)
 
         if not isinstance(data, dict):
             raise ConstraintException('Invalid field {}: {}'.format(self.name, data))
 
-        for key in data:
-            setattr(instance, key, data[key])
+        try:
+            instance = self.object_class()
+            for key in data:
+                setattr(instance, key, data[key])
+        except TypeError:
+            instance = self.object_class(**data)
 
         return instance
 
