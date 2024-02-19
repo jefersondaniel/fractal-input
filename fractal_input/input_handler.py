@@ -11,7 +11,8 @@ class InputHandler(object):
         self.output = None
         self.errors = []
 
-    def bind(self, input_data):
+    def bind(self, input_data, defaults={}):
+        self.root_node.defaults.update(defaults)
         self.define()
 
         self.input_data = input_data
