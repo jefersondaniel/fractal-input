@@ -9,6 +9,8 @@ class Node(object):
         self.constraints = []
         self.type_handler = type_handler
         self.is_required = True
+        self.defaults = {}
+        self.default = None
 
     def has_children(self):
         return len(self.children) > 0
@@ -36,7 +38,11 @@ class Node(object):
 
         for child in self.children:
             if child.name not in value and not child.is_required:
-                continue
+                if child.default is None:
+                    continue
+
+                value[child.name] = child.default
+
             child_value = value.get(child.name, None)
             result[child.name] = child.get_value(child.walk(child_value))
 
@@ -44,6 +50,10 @@ class Node(object):
 
     def add(self, name, node_type, options=None):
         node = self.type_handler.create_node(node_type)
+
+        if name in self.defaults:
+            node.default = self.defaults[name]
+
         node.configure(name, options)
         self.children.append(node)
         return node
@@ -59,6 +69,8 @@ class Node(object):
         if self.is_required:
             self.constraints.append(RequiredConstraint())
 
+        if 'constraints' in options:
+            self.constraints.extend(options['constraints'])
 
 class StringNode(Node):
     def transform(self, value):
@@ -98,6 +110,10 @@ class ObjectNode(Node):
         self.object_class = object_class
 
     def get_value(self, input_value):
+        for constraint in self.constraints:
+            if not constraint.validate(input_value):
+                raise ConstraintException(constraint.message.replace('{field}', self.name))
+
         if input_value is None:
             return None
 
@@ -105,6 +121,14 @@ class ObjectNode(Node):
 
         if not isinstance(data, dict):
             raise ConstraintException('Invalid field {}: {}'.format(self.name, data))
+
+        if self.default is not None:
+            instance = self.default
+
+            for key in data:
+                setattr(instance, key, data[key])
+
+            return instance
 
         try:
             instance = self.object_class()
