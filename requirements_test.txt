@@ -1,7 +1,7 @@
 mock
-coverage==5.2.1
-flake8==3.8.3
+coverage==7.4.0
+flake8==6.1.0
 phulpy==1.0.10
-pytest==5.4.3
-pytest-cov==2.10.0
-pytest-mock==3.2.0
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0

@@ -72,6 +72,7 @@ class Node(object):
         if 'constraints' in options:
             self.constraints.extend(options['constraints'])
 
+
 class StringNode(Node):
     def transform(self, value):
         if value is None:
