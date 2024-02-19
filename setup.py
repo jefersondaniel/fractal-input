@@ -4,7 +4,7 @@ import fractal_input
 long_description = open('README.rst', 'r').read()
 
 setup(
-    name='fractal_input',
+    name='fractal-input',
     version=fractal_input.__version__,
     packages=['fractal_input'],
     setup_requires=['wheel'],
