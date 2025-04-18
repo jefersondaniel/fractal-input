@@ -3,6 +3,7 @@ from fractal_input import InputHandler, ListNode, DatetimeNode
 
 
 class TestInputHandler(object):
+    @pytest.mark.asyncio
     async def test_get_data_as_dict(self):
         class DataHandler(InputHandler):
             def define(self):
@@ -20,6 +21,7 @@ class TestInputHandler(object):
         assert handler.is_valid()
         assert 'Jamal' == handler.get_data()['name']
 
+    @pytest.mark.asyncio
     async def test_get_data_as_object(self):
         class User:
             name = None
@@ -83,6 +85,7 @@ class TestInputHandler(object):
         assert 'Lala' == handler.get_data()['user'].address.street
         assert 'Emily' == handler.get_data()['user'].address.owner.name
 
+    @pytest.mark.asyncio
     async def test_validation(self):
         class User:
             pass
@@ -160,6 +163,7 @@ class TestInputHandler(object):
 
         assert not handler.is_valid()
 
+    @pytest.mark.asyncio
     async def test_invalid_type(self):
         class DataHandler(InputHandler):
             def define(self):
@@ -170,6 +174,7 @@ class TestInputHandler(object):
         with pytest.raises(Exception):
             await handler.bind({})
 
+    @pytest.mark.asyncio
     async def test_nullable_values(self):
         class DataHandler(InputHandler):
             def define(self):
@@ -181,6 +186,7 @@ class TestInputHandler(object):
         assert handler.is_valid()
         assert not handler.get_error_as_string()
 
+    @pytest.mark.asyncio
     async def test_nested_object_lists(self):
         class User(object):
             name = None
@@ -209,6 +215,7 @@ class TestInputHandler(object):
         data = handler.get_data()
         assert '123' == data['users'][0].telephones[0].number
 
+    @pytest.mark.asyncio
     async def test_supports_data_classes(self):
         class User(object):
             def __init__(self, name, email, telephones):
