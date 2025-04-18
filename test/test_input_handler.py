@@ -3,7 +3,7 @@ from fractal_input import InputHandler, ListNode, DatetimeNode
 
 
 class TestInputHandler(object):
-    def test_get_data_as_dict(self):
+    async def test_get_data_as_dict(self):
         class DataHandler(InputHandler):
             def define(self):
                 self.add('name', 'string', {'required': True})
@@ -11,7 +11,7 @@ class TestInputHandler(object):
                 self.add('age', 'integer')
 
         handler = DataHandler()
-        handler.bind({
+        await handler.bind({
             'name': 'Jamal',
             'email': 'jamal@here.com',
             'age': 13
@@ -20,7 +20,7 @@ class TestInputHandler(object):
         assert handler.is_valid()
         assert 'Jamal' == handler.get_data()['name']
 
-    def test_get_data_as_object(self):
+    async def test_get_data_as_object(self):
         class User:
             name = None
             email = None
@@ -54,7 +54,7 @@ class TestInputHandler(object):
 
         handler = UserHandler()
 
-        handler.bind({
+        await handler.bind({
             'user': {
                 'name': 'Jamal',
                 'email': 'jamal@here.com',
@@ -83,7 +83,7 @@ class TestInputHandler(object):
         assert 'Lala' == handler.get_data()['user'].address.street
         assert 'Emily' == handler.get_data()['user'].address.owner.name
 
-    def test_validation(self):
+    async def test_validation(self):
         class User:
             pass
 
@@ -104,14 +104,14 @@ class TestInputHandler(object):
 
         handler = DataHandler()
 
-        handler.bind({})
+        await handler.bind({})
         assert not handler.is_valid()
         assert 'string_value is required' == handler.get_error_as_string()
 
-        handler.bind({'string_value': '1'})
+        await handler.bind({'string_value': '1'})
         assert 'integer_value is required' == handler.get_error_as_string()
 
-        handler.bind({
+        await handler.bind({
             'string_value': '1',
             'integer_value': '1',
             'float_value': '1',
@@ -142,7 +142,7 @@ class TestInputHandler(object):
             'none_list_value': None,
         } == handler.get_data()
 
-        handler.bind({
+        await handler.bind({
             'string_value': '1',
             'integer_value': '1',
             'float_value': '1',
@@ -151,7 +151,7 @@ class TestInputHandler(object):
 
         assert not handler.is_valid()
 
-        handler.bind({
+        await handler.bind({
             'string_value': '1',
             'integer_value': '1',
             'float_value': '1',
@@ -160,7 +160,7 @@ class TestInputHandler(object):
 
         assert not handler.is_valid()
 
-    def test_invalid_type(self):
+    async def test_invalid_type(self):
         class DataHandler(InputHandler):
             def define(self):
                 self.add('string_value', 'lala', {'required': True})
@@ -168,20 +168,20 @@ class TestInputHandler(object):
         handler = DataHandler()
 
         with pytest.raises(Exception):
-            handler.bind({})
+            await handler.bind({})
 
-    def test_nullable_values(self):
+    async def test_nullable_values(self):
         class DataHandler(InputHandler):
             def define(self):
                 self.add('name', 'string', {'required': False})
 
         handler = DataHandler()
-        handler.bind({'name': None})
+        await handler.bind({'name': None})
 
         assert handler.is_valid()
         assert not handler.get_error_as_string()
 
-    def test_nested_object_lists(self):
+    async def test_nested_object_lists(self):
         class User(object):
             name = None
 
@@ -195,7 +195,7 @@ class TestInputHandler(object):
                 telephone.add('number', 'string')
 
         handler = DataHandler()
-        handler.bind({
+        await handler.bind({
             'users': [{
                 'telephones': [
                     {'number': '123'}
@@ -209,7 +209,7 @@ class TestInputHandler(object):
         data = handler.get_data()
         assert '123' == data['users'][0].telephones[0].number
 
-    def test_supports_data_classes(self):
+    async def test_supports_data_classes(self):
         class User(object):
             def __init__(self, name, email, telephones):
                 self.name = name
@@ -228,7 +228,7 @@ class TestInputHandler(object):
                 telephone.add('number', 'string')
 
         handler = DataHandler()
-        handler.bind({
+        await handler.bind({
             'users': [{
                 'name': 'Rick',
                 'email': 'rick@rick.com',
