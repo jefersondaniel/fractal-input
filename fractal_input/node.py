@@ -15,19 +15,19 @@ class Node(object):
     def has_children(self):
         return len(self.children) > 0
 
-    def transform(self, value):
+    async def transform(self, value):
         return value
 
-    def get_value(self, value):
+    async def get_value(self, value):
         for constraint in self.constraints:
             if not constraint.validate(value):
                 raise ConstraintException(constraint.message.replace('{field}', self.name))
 
-        value = self.transform(value)
+        value = await self.transform(value)
 
         return value
 
-    def walk(self, value):
+    async def walk(self, value):
         if not isinstance(value, dict):
             return value
 
@@ -44,7 +44,7 @@ class Node(object):
                 value[child.name] = child.default
 
             child_value = value.get(child.name, None)
-            result[child.name] = child.get_value(child.walk(child_value))
+            result[child.name] = await child.get_value(await child.walk(child_value))
 
         return result
 
@@ -74,7 +74,7 @@ class Node(object):
 
 
 class StringNode(Node):
-    def transform(self, value):
+    async def transform(self, value):
         if value is None:
             return None
 
@@ -82,7 +82,7 @@ class StringNode(Node):
 
 
 class IntegerNode(Node):
-    def transform(self, value):
+    async def transform(self, value):
         if value is None:
             return None
 
@@ -90,7 +90,7 @@ class IntegerNode(Node):
 
 
 class FloatNode(Node):
-    def transform(self, value):
+    async def transform(self, value):
         if value is None:
             return None
 
@@ -98,7 +98,7 @@ class FloatNode(Node):
 
 
 class BooleanNode(Node):
-    def transform(self, value):
+    async def transform(self, value):
         if value is None:
             return None
 
@@ -110,7 +110,7 @@ class ObjectNode(Node):
         super(ObjectNode, self).__init__(type_handler)
         self.object_class = object_class
 
-    def get_value(self, input_value):
+    async def get_value(self, input_value):
         for constraint in self.constraints:
             if not constraint.validate(input_value):
                 raise ConstraintException(constraint.message.replace('{field}', self.name))
@@ -118,7 +118,7 @@ class ObjectNode(Node):
         if input_value is None:
             return None
 
-        data = super(ObjectNode, self).get_value(input_value)
+        data = await super(ObjectNode, self).get_value(input_value)
 
         if not isinstance(data, dict):
             raise ConstraintException('Invalid field {}: {}'.format(self.name, data))
@@ -146,7 +146,7 @@ class DatetimeNode(Node):
         super(DatetimeNode, self).__init__()
         self.formatter = formatter
 
-    def transform(self, value):
+    async def transform(self, value):
         if value is None:
             return None
 
@@ -167,7 +167,7 @@ class ListNode(Node):
             self.inner_node = self.type_handler.create_node(self.inner_node_type)
         return self.inner_node
 
-    def walk(self, values):
+    async def walk(self, values):
         if not self.isiterable(values):
             return None
 
@@ -175,7 +175,7 @@ class ListNode(Node):
 
         for value in values:
             item_node = self.get_inner_node()
-            item_value = item_node.get_value(item_node.walk(value))
+            item_value = await item_node.get_value(await item_node.walk(value))
             result.append(item_value)
 
         return result

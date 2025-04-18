@@ -11,7 +11,7 @@ class InputHandler(object):
         self.output = None
         self.errors = []
 
-    def bind(self, input_data, defaults={}):
+    async def bind(self, input_data, defaults={}):
         self.root_node.defaults.update(defaults)
         self.define()
 
@@ -20,7 +20,7 @@ class InputHandler(object):
         self.output = None
 
         try:
-            self.output = self.root_node.get_value(self.root_node.walk(self.input_data))
+            self.output = await self.root_node.get_value(await self.root_node.walk(self.input_data))
         except ConstraintException as e:
             self.errors.append(e.message)
 
