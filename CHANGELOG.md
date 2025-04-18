@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/jefersondaniel/fractal-input/compare/v1.1.0...v2.0.0) (2025-04-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* async io ([#17](https://github.com/jefersondaniel/fractal-input/issues/17))
+
+### Features
+
+* async io ([#17](https://github.com/jefersondaniel/fractal-input/issues/17)) ([ada0001](https://github.com/jefersondaniel/fractal-input/commit/ada00017ff9361fb5ee5719965600ed9af2b52d3))
+
 ## [1.1.0](https://github.com/jefersondaniel/fractal-input/compare/1.0.0...v1.1.0) (2024-02-19)
 
 
