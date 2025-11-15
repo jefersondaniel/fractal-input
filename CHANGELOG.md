@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/jefersondaniel/fractal-input/compare/v2.0.0...v2.1.0) (2025-11-15)
+
+
+### Features
+
+* add email type ([#20](https://github.com/jefersondaniel/fractal-input/issues/20)) ([2942c90](https://github.com/jefersondaniel/fractal-input/commit/2942c904f3666ffc108a372e7ceff3054fe74ea1))
+
 ## [2.0.0](https://github.com/jefersondaniel/fractal-input/compare/v1.1.0...v2.0.0) (2025-04-18)
 
 
