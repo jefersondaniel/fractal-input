@@ -1,4 +1,4 @@
-from .node import Node, ObjectNode, StringNode, IntegerNode, FloatNode, BooleanNode
+from .node import Node, ObjectNode, StringNode, IntegerNode, FloatNode, BooleanNode, EmailNode
 
 
 class InvalidTypeException(Exception):
@@ -12,6 +12,7 @@ class TypeHandler(object):
             'integer': IntegerNode,
             'float': FloatNode,
             'boolean': BooleanNode,
+            'email': EmailNode,
             'dict': Node,
         }
 
