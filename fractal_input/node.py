@@ -1,5 +1,16 @@
+import re
 from datetime import datetime
 from .constraint import RequiredConstraint, ConstraintException
+
+
+'''
+Taken from HTML spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
+'''
+EMAIL_REGEX = (
+    r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@"
+    r"[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?"
+    r"(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+)
 
 
 class Node(object):
@@ -154,6 +165,24 @@ class DatetimeNode(Node):
             return datetime.strptime(value, self.formatter)
         except ValueError as e:
             raise ConstraintException('Invalid {}: {}'.format(self.name, str(e)))
+
+
+class EmailNode(StringNode):
+    def __init__(self):
+        super(EmailNode, self).__init__()
+
+    async def transform(self, value):
+        value = await super(EmailNode, self).transform(value)
+
+        if value is None:
+            return None
+
+        normalized_value = value.strip().lower()
+
+        if not re.match(EMAIL_REGEX, normalized_value):
+            raise ConstraintException('Invalid {}: {} is not a valid email address'.format(self.name, value))
+
+        return normalized_value
 
 
 class ListNode(Node):
